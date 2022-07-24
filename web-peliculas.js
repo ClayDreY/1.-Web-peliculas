@@ -137,36 +137,107 @@ async function obtenerDatos() {
 obtenerDatos();*/
 
 //POR EL PROFE - FINAL:
+let orden = "nombre ascendente";
+function nombreAscendente() {
+    orden = "nombre ascendente";
+    obtenerDatos();
+}
+function nombreDescendente() {
+    orden = "nombre descendente";
+    obtenerDatos();
+}
+
 async function obtenerDatos() {
     //PELÍCULAS:
     const peliculas = await fetchJSON(peliculasURL);
-    console.log(peliculas);
+    //console.log(peliculas);
     //CONFIGURACIÓN:
     const configuracion = await fetchJSON(configuracionURL);
-    console.log(configuracion);
+    //console.log(configuracion);
 
+    let peliculasArray = peliculas.results;
 
     const baseURL = configuracion.images.base_url;
     const posterSize = configuracion.images.poster_sizes[3];
 
-    document.getElementById("controles").innerHTML = 
+    //let listaPeliculas= peliculas.innerHTML;
+
+    //Para añadir Botones y buscador
+    document.getElementById("controles").innerHTML =
         `<div id="controles">
-            <input onkeyup="actualizarLista()" type="text" name="barra-busqueda" id="barra-busqueda"><br>
+            <input onkeyup="obtenerDatos()" type="text" name="barra-busqueda" id="barra-busqueda"><br>
             <button onclick="nombreAscendente()">Nombre Asc</button>
             <button onclick="nombreDescendente()">Nombre Des</button><br>
         </div>`;
 
-    document.getElementById("contenedor").innerHTML =
-    peliculas.results.map(
-        pelicula =>
-        `<div class="ficha-peliculas">
-                <img src="${baseURL + posterSize + pelicula.poster_path}"alt="">
-                <h2>${pelicula.title}</h2>
-                <span>${pelicula.release_date.substring(0,4)}</span>
-                <p>${pelicula.overview}</p>
-        </div>`)
-    .join("\n");
+    let divPeliculas = document.getElementById("contenedor");
+    //ORDEN ALFABÉTICO
+    if (orden === "nombre ascendente") {
+        divPeliculas.innerHTML = peliculas.results.sort(
+            (a, b) => {
+                if (a.title.toLowerCase() > b.title.toLowerCase()) return 1;
+                if (a.title.toLowerCase() < b.title.toLowerCase()) return -1;
+                return 0;
+            }
+        ).map(
+            p =>
+                `<div class="ficha-peliculas">
+                <img src="${baseURL + posterSize + p.poster_path}"alt="">
+                <h2>${p.title}</h2>
+                <span>${p.release_date.substring(0, 4)}</span>
+                <p>${p.overview}</p>
+            </div>`).join("\n");
+    }
+    else if (orden === "nombre descendente") {
+        divPeliculas.innerHTML = peliculas.results.sort(
+            (a, b) => {
+                if (a.title.toLowerCase() > b.title.toLowerCase()) return -1;
+                if (a.title.toLowerCase() < b.title.toLowerCase()) return 1;
+                return 0;
+            }
+        ).map(
+            p =>
+                `<div class="ficha-peliculas">
+                <img src="${baseURL + posterSize + p.poster_path}"alt="">
+                <h2>${p.title}</h2>
+                <span>${p.release_date.substring(0, 4)}</span>
+                <p>${p.overview}</p>
+            </div>`).join("\n");
+    } else {
+        return divPeliculas.innerHTML;
+    }
 
-    
+    //BUSCADOR
+
+    let textoBuscado = document.getElementById("barra-busqueda").value;
+
+    document.getElementById("barra-busqueda").innerHTML = peliculasArray
+            .filter(
+                p => p.title.toLowerCase().includes(textoBuscado.toLowerCase()))
+            .map(
+                n =>
+                    `<div class="ficha-peliculas">
+            <img src="${baseURL + posterSize + n.poster_path}"alt="">
+            <h2>${n.title}</h2>
+            <span>${n.release_date.substring(0, 4)}</span>
+            <p>${n.overview}</p>
+        </div>`
+            ).join("\n");
+
+
+
+    //Está puesto arriba. aquí no hace falta. (se hizo antes de lo de los botones y el buscador)
+    /* document.getElementById("contenedor").innerHTML =
+        peliculas.results.map(
+            pelicula =>
+                `<div class="ficha-peliculas">
+            <img src="${baseURL + posterSize + pelicula.poster_path}"alt="">
+            <h2>${pelicula.title}</h2>
+            <span>${pelicula.release_date.substring(0, 4)}</span>
+            <p>${pelicula.overview}</p>
+        </div>`)
+            .join("\n"); */
+
+
 }
 obtenerDatos();
