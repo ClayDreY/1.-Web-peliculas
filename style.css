@@ -1,0 +1,39 @@
+body{
+    display: flex;
+    flex-direction: column;
+    margin:1em;
+}
+h1{
+    width: 20em;
+    margin:1rem;
+    text-align: center;
+}
+#contenedor{
+    display: flex;
+    flex-direction: column;
+    width: 50em;
+    padding: 1rem;
+}
+.ficha-peliculas{
+    margin: 1em;
+    width: 40em;
+    border: 1px solid black;
+    background-color: rgba(127, 255, 212, 0.199);
+}
+h2{
+    text-align: center;
+}
+span{
+    margin:0.5em 20em;
+}
+p{
+    padding: 1.5em;
+    text-indent: 1em;
+    font-weight: 600;
+    text-align: justify;
+}
+img{ 
+    margin:0.5em 6em;
+    width: 450px;
+    height: auto;
+}
